@@ -5,6 +5,8 @@ use clearscreen::clear;
 use regex::Regex;
 mod generators;
 
+const SPRING_VERSION: &str = "3.2.0";
+const GRADLE_DEP_MANAGEMENT_VERSION: &str = "1.1.4";
 
 fn get_input(prompt: &str) -> String {
     print!("{}", prompt);
@@ -87,15 +89,24 @@ fn main() {
 
 
     if spring_boot {
-        generators::spring::create(&src_path).expect("Failed to generate Java Spring Boot source file");
+        generators::source_java_spring::create(&src_path).expect("Failed to generate Java Spring Boot source file");
     } else {
-        generators::standard::create(&src_path).expect("Failed to generate Standard Java source file");
+        generators::source_java_standard::create(&src_path).expect("Failed to generate Standard Java source file");
     };
-
 
     generators::gitignore::create(&project_path).expect("Fail to create .gitignore");
     generators::dockerignore::create(&project_path).expect("Fail to create .dockerignore");
     generators::license::create(&project_path).expect("Fail to create LICENSE");
+    generators::readme_md::create(&project_path, &java_project_name).expect("Fail to create LICENSE");
+
+    if build_tool == "maven" {
+        generators::pom_xml::create(&project_path, &java_project_name, spring_boot, &SPRING_VERSION).expect("Fail to create pom.xml");
+    }
+
+    if build_tool == "gradle" {
+        generators::settings_gradle::create(&project_path, &java_project_name).expect("Fail to create settings.gradle");
+        generators::build_gradle::create(&project_path, spring_boot, &SPRING_VERSION, &GRADLE_DEP_MANAGEMENT_VERSION).expect("Fail to create build.gradle");
+    }
 
 
     println!("Projeto: {} | Build: {} | Spring Boot: {}", java_project_name, build_tool, spring_boot); // CÓDIGO DE TESTE AQUI 

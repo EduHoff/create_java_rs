@@ -3,7 +3,8 @@ use std::path::PathBuf;
 
 pub fn create(project_path: &PathBuf) -> std::io::Result<()> {
     let file_path = project_path.join(".dockerignore");
-    let content = r#"# Git
+    let content = 
+r#"# Git
 .git
 .gitignore
 

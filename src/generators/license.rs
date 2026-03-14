@@ -3,7 +3,8 @@ use std::path::PathBuf;
 
 pub fn create(project_path: &PathBuf) -> std::io::Result<()> {
     let file_path = project_path.join("LICENSE");
-    let content = r#"                    GNU AFFERO GENERAL PUBLIC LICENSE
+    let content = 
+r#"                    GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>

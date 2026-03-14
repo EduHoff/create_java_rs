@@ -3,7 +3,8 @@ use std::path::PathBuf;
 
 pub fn create(project_path: &PathBuf) -> std::io::Result<()> {
     let file_path = project_path.join(".gitignore");
-    let content = r#"# Created by https://www.toptal.com/developers/gitignore/api/java,maven,gradle,intellij,eclipse,visualstudiocode,netbeans
+    let content = 
+r#"# Created by https://www.toptal.com/developers/gitignore/api/java,maven,gradle,intellij,eclipse,visualstudiocode,netbeans
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,maven,gradle,intellij,eclipse,visualstudiocode,netbeans
 
 ### Eclipse ###
