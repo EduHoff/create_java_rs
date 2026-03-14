@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use std::fs;
 use clearscreen::clear;
 use regex::Regex;
+mod generators;
 
 
 fn get_input(prompt: &str) -> String {
@@ -17,7 +18,7 @@ fn get_input(prompt: &str) -> String {
 fn main() {
 
     let base_dir = std::env::current_dir().expect("Failed to get current directory");
-    
+
     let java_project_name_pattern = Regex::new(r"^[a-zA-Z_$][a-zA-Z_$0-9]*$").unwrap();
     let mut project_path = PathBuf::new();
     let mut java_project_name = String::new();
@@ -45,9 +46,9 @@ fn main() {
     }
 
     // BUILD TOOL
+    clear().expect("Fail to clear screen");
     let mut build_tool = String::new();
     loop {
-        clear().expect("Fail to clear screen");
         println!("1 | Vanilla \n2 | Maven \n3 | Gradle \n");
         let choice = get_input("|| ");
 
@@ -55,11 +56,12 @@ fn main() {
             "1" => { build_tool = "vanilla".to_string(); break; }
             "2" => { build_tool = "maven".to_string(); break; }
             "3" => { build_tool = "gradle".to_string(); break; }
-            _ => println!("Invalid option!"),
+            _ => {clear().expect("Fail to clear screen"); println!("Invalid option!"); },
         }
     }
 
     // SPRING BOOT
+    clear().expect("Fail to clear screen");
     let mut spring_boot = false;
     if build_tool != "vanilla" {
         loop {
@@ -70,10 +72,31 @@ fn main() {
             match choice.as_str() {
                 "1" => { spring_boot = true; break; }
                 "2" => { spring_boot = false; break; }
-                _ => println!("Invalid option!"),
+                _ => {clear().expect("Fail to clear screen"); println!("Invalid option!"); },
             }
         }
     }
+
+
+    let src_path = if build_tool == "vanilla" {
+        project_path.join("src").join("application")
+    } else {
+        project_path.join("src").join("main").join("java").join("application")
+    };
+    fs::create_dir_all(&src_path).expect("Failed to create source directories");
+
+
+    if spring_boot {
+        generators::spring::create(&src_path).expect("Failed to generate Java Spring Boot source file");
+    } else {
+        generators::standard::create(&src_path).expect("Failed to generate Standard Java source file");
+    };
+
+
+    generators::gitignore::create(&project_path).expect("Fail to create .gitignore");
+    generators::dockerignore::create(&project_path).expect("Fail to create .dockerignore");
+    generators::license::create(&project_path).expect("Fail to create LICENSE");
+
 
     println!("Projeto: {} | Build: {} | Spring Boot: {}", java_project_name, build_tool, spring_boot); // CÓDIGO DE TESTE AQUI 
 }
