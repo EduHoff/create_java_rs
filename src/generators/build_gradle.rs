@@ -3,8 +3,6 @@ use std::path::PathBuf;
 
 pub fn create(project_path: &PathBuf, spring_boot: bool, spring_version: &str, gradle_dep_mgmt_version: &str) -> std::io::Result<()> {
     let path = project_path.join("build.gradle");
-    let gradle_dep_mgmt_version = "1.1.4";
-
 
     let plugins_section = if spring_boot {
         format!(
@@ -34,7 +32,7 @@ application {
 }"#
     };
 
-    
+
     let content = format!(
 r#"plugins {{
 {plugins_section}

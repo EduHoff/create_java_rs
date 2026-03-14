@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::PathBuf;
 
-pub fn create(project_path: &PathBuf, project_name: &str, spring_boot: bool, spring_version: &str) -> std::io::Result<()> {
+pub fn create(project_path: &PathBuf, java_project_name: &str, spring_boot: bool, spring_version: &str) -> std::io::Result<()> {
     let path = project_path.join("pom.xml");
 
 
@@ -35,7 +35,7 @@ r#"<project xmlns="http://maven.apache.org/POM/4.0.0">
 {parent_section}
 
     <groupId>com.example</groupId>
-    <artifactId>{project_name}</artifactId>
+    <artifactId>{name}</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -45,7 +45,7 @@ r#"<project xmlns="http://maven.apache.org/POM/4.0.0">
 {dependencies_section}
 </project>"#,
         parent_section = parent_section,
-        project_name = project_name,
+        name = java_project_name,
         dependencies_section = dependencies_section
     );
 
